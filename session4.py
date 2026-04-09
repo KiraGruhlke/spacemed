@@ -46,30 +46,7 @@ for line in dataFile.readlines() : # now the for loop starts with the second lin
 # if I reexecude the loop later, I might already be in the wrong line of the file
 
 # %%
-print(len(time), len(absorption)) # how many items do I have in it (length)
+pyplot.plot(time, absorption)
+pyplot.xlabel("time [s]")
 
 # %%
-for i in range (10): # print the first 10 items
-    print(time[i], absorption[i])
-
-# %% [markdown]
-# ## Random plot
-
-# %%
-x=numpy.random.normal(size=(500,)) #select 500 normally distributed random data points
-y=numpy.random.normal(size=(500,))
-
-# %%
-pyplot.plot(x,y,"or") # plot them in red
-pyplot.xlabel("x-achsis") # label the x-achsis
-pyplot.ylabel("y-achsis") #label the y-achsis
-pyplot.title("random points") # give a title
-
-# %% [markdown]
-# ## Plot the PPG
-
-# %%
-pyplot.plot(time, absorption) #plot the lists, the first named list is gonna be placed on the x-achsis
-pyplot.xlabel("time") # label the x-achsis
-pyplot.ylabel("absorption") #label the y-achsis
-pyplot.title("PPG") # give a title
