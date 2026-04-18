@@ -1,0 +1,2221 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Session 5 - Pandas</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="session5_files/libs/clipboard/clipboard.min.js"></script>
+<script src="session5_files/libs/quarto-html/quarto.js"></script>
+<script src="session5_files/libs/quarto-html/popper.min.js"></script>
+<script src="session5_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="session5_files/libs/quarto-html/anchor.min.js"></script>
+<link href="session5_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="session5_files/libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="session5_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="session5_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="session5_files/libs/bootstrap/bootstrap-c1166c9d372bd5265ff2dd5a24c1f0b9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Session 5 - Pandas</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="358c96f3-baa9-46cc-9896-1c1fa92bcb4a" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b2d38708-bb64-484f-bde3-1bdd5d1f91d6" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>station_ids <span class="op">=</span> pandas.read_csv(<span class="st">"data/Niederschlag_1981-2010_Stationsliste.txt"</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                              encoding<span class="op">=</span><span class="st">"iso-8859-1"</span>, delimiter<span class="op">=</span><span class="st">" *; *"</span>, <span class="co">#star to include any number of spaces</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                             index_col<span class="op">=</span><span class="st">"Stations_id"</span>, engine<span class="op">=</span><span class="st">"python"</span>) <span class="co">#read the file</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="4804e625-3772-42bb-93bb-89bd32d5325e" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>station_ids <span class="co">#show an overview</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="43">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Stationsname</th>
+<th data-quarto-table-cell-role="th">geogr. Breite</th>
+<th data-quarto-table-cell-role="th">geogr. Laenge</th>
+<th data-quarto-table-cell-role="th">Stationshoehe</th>
+<th data-quarto-table-cell-role="th">Bundesland</th>
+<th data-quarto-table-cell-role="th">Unnamed: 6</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Stations_id</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Aach</td>
+<td>47.841299</td>
+<td>8.849299</td>
+<td>478.0</td>
+<td>Baden-Württemberg</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Aachen (Kläranlage)</td>
+<td>50.806581</td>
+<td>6.099638</td>
+<td>138.0</td>
+<td>Nordrhein-Westfalen</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Aachen</td>
+<td>50.782659</td>
+<td>6.094087</td>
+<td>202.0</td>
+<td>Nordrhein-Westfalen</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Aachen-Brand</td>
+<td>50.768313</td>
+<td>6.120705</td>
+<td>243.0</td>
+<td>Nordrhein-Westfalen</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>Aalen-Unterrombach</td>
+<td>48.836072</td>
+<td>10.059764</td>
+<td>455.0</td>
+<td>Baden-Württemberg</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19697</td>
+<td>Wassertrüdingen/Wörnitz</td>
+<td>49.046341</td>
+<td>10.602684</td>
+<td>435.0</td>
+<td>Bayern</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19698</td>
+<td>Werda/Vogtland</td>
+<td>50.448020</td>
+<td>12.305168</td>
+<td>595.0</td>
+<td>Sachsen</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19701</td>
+<td>Wertingen/Zusam</td>
+<td>48.557500</td>
+<td>10.674167</td>
+<td>430.0</td>
+<td>Bayern</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19706</td>
+<td>Oberndorf am Neckar</td>
+<td>48.285077</td>
+<td>8.576395</td>
+<td>516.0</td>
+<td>Baden-Württemberg</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19781</td>
+<td>Ingolstadt</td>
+<td>48.742909</td>
+<td>11.423324</td>
+<td>367.0</td>
+<td>Bayern</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+<p>5740 rows × 6 columns</p>
+</div>
+</div>
+</div>
+<div id="00bf8794-d6d8-40d6-bf17-fc2fcd42a13c" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>station_ids.columns <span class="co">#tell us which columns are there</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="44">
+<pre><code>Index(['Stationsname', 'geogr. Breite', 'geogr. Laenge', 'Stationshoehe',
+       'Bundesland', 'Unnamed: 6'],
+      dtype='str')</code></pre>
+</div>
+</div>
+<div id="5a9952eb-bc21-4bfc-bbc1-63e06963b364" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>station_ids.info() <span class="co">#get information; brackets to display it nicely</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.DataFrame'&gt;
+Index: 5740 entries, 1 to 19781
+Data columns (total 6 columns):
+ #   Column         Non-Null Count  Dtype  
+---  ------         --------------  -----  
+ 0   Stationsname   5740 non-null   str    
+ 1   geogr. Breite  5740 non-null   float64
+ 2   geogr. Laenge  5740 non-null   float64
+ 3   Stationshoehe  5740 non-null   float64
+ 4   Bundesland     5740 non-null   str    
+ 5   Unnamed: 6     0 non-null      float64
+dtypes: float64(4), str(2)
+memory usage: 313.9 KB</code></pre>
+</div>
+</div>
+<div id="0ce8c6ba-079a-4efa-a0e0-2e033599a00c" class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>station_ids.head() <span class="co">#show first five lines</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Stationsname</th>
+<th data-quarto-table-cell-role="th">geogr. Breite</th>
+<th data-quarto-table-cell-role="th">geogr. Laenge</th>
+<th data-quarto-table-cell-role="th">Stationshoehe</th>
+<th data-quarto-table-cell-role="th">Bundesland</th>
+<th data-quarto-table-cell-role="th">Unnamed: 6</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Stations_id</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Aach</td>
+<td>47.841299</td>
+<td>8.849299</td>
+<td>478.0</td>
+<td>Baden-Württemberg</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Aachen (Kläranlage)</td>
+<td>50.806581</td>
+<td>6.099638</td>
+<td>138.0</td>
+<td>Nordrhein-Westfalen</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Aachen</td>
+<td>50.782659</td>
+<td>6.094087</td>
+<td>202.0</td>
+<td>Nordrhein-Westfalen</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Aachen-Brand</td>
+<td>50.768313</td>
+<td>6.120705</td>
+<td>243.0</td>
+<td>Nordrhein-Westfalen</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>Aalen-Unterrombach</td>
+<td>48.836072</td>
+<td>10.059764</td>
+<td>455.0</td>
+<td>Baden-Württemberg</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="3313654b-759c-4492-bdf1-695118704c24" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>station_ids.tail() <span class="co">#show last five lines</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="47">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Stationsname</th>
+<th data-quarto-table-cell-role="th">geogr. Breite</th>
+<th data-quarto-table-cell-role="th">geogr. Laenge</th>
+<th data-quarto-table-cell-role="th">Stationshoehe</th>
+<th data-quarto-table-cell-role="th">Bundesland</th>
+<th data-quarto-table-cell-role="th">Unnamed: 6</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Stations_id</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19697</td>
+<td>Wassertrüdingen/Wörnitz</td>
+<td>49.046341</td>
+<td>10.602684</td>
+<td>435.0</td>
+<td>Bayern</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19698</td>
+<td>Werda/Vogtland</td>
+<td>50.448020</td>
+<td>12.305168</td>
+<td>595.0</td>
+<td>Sachsen</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19701</td>
+<td>Wertingen/Zusam</td>
+<td>48.557500</td>
+<td>10.674167</td>
+<td>430.0</td>
+<td>Bayern</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19706</td>
+<td>Oberndorf am Neckar</td>
+<td>48.285077</td>
+<td>8.576395</td>
+<td>516.0</td>
+<td>Baden-Württemberg</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19781</td>
+<td>Ingolstadt</td>
+<td>48.742909</td>
+<td>11.423324</td>
+<td>367.0</td>
+<td>Bayern</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cdf2adbc-bfa9-4f9f-8f27-cbc9b0321cdb" class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>station_ids.drop (station_ids.columns [<span class="op">-</span><span class="dv">1</span>], axis<span class="op">=</span><span class="dv">1</span>, inplace<span class="op">=</span><span class="va">True</span>) <span class="co">#delete the last column (columns=-1, lines=0)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="8b92d39b-f1fb-49dc-9a79-85644f4d8d50" class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>station_ids.columns <span class="co"># run to check the working of prior line</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="49">
+<pre><code>Index(['Stationsname', 'geogr. Breite', 'geogr. Laenge', 'Stationshoehe',
+       'Bundesland'],
+      dtype='str')</code></pre>
+</div>
+</div>
+<div id="7bb534ed-1016-45a6-b104-f71fc518b74f" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>station_ids.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.DataFrame'&gt;
+Index: 5740 entries, 1 to 19781
+Data columns (total 5 columns):
+ #   Column         Non-Null Count  Dtype  
+---  ------         --------------  -----  
+ 0   Stationsname   5740 non-null   str    
+ 1   geogr. Breite  5740 non-null   float64
+ 2   geogr. Laenge  5740 non-null   float64
+ 3   Stationshoehe  5740 non-null   float64
+ 4   Bundesland     5740 non-null   str    
+dtypes: float64(3), str(2)
+memory usage: 269.1 KB</code></pre>
+</div>
+</div>
+<div id="93de81ef-a985-4104-ad84-937c165bc6c9" class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>station_ids.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="51">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Stationsname</th>
+<th data-quarto-table-cell-role="th">geogr. Breite</th>
+<th data-quarto-table-cell-role="th">geogr. Laenge</th>
+<th data-quarto-table-cell-role="th">Stationshoehe</th>
+<th data-quarto-table-cell-role="th">Bundesland</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Stations_id</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Aach</td>
+<td>47.841299</td>
+<td>8.849299</td>
+<td>478.0</td>
+<td>Baden-Württemberg</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Aachen (Kläranlage)</td>
+<td>50.806581</td>
+<td>6.099638</td>
+<td>138.0</td>
+<td>Nordrhein-Westfalen</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Aachen</td>
+<td>50.782659</td>
+<td>6.094087</td>
+<td>202.0</td>
+<td>Nordrhein-Westfalen</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Aachen-Brand</td>
+<td>50.768313</td>
+<td>6.120705</td>
+<td>243.0</td>
+<td>Nordrhein-Westfalen</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>Aalen-Unterrombach</td>
+<td>48.836072</td>
+<td>10.059764</td>
+<td>455.0</td>
+<td>Baden-Württemberg</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="20b1b4ed-49a8-4690-8348-7dc8839d3e76" class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>station_ids.iloc[<span class="dv">2</span>,<span class="dv">0</span>] <span class="co">#iloc: use the index 2,0 (see loading of data, which made the station-id-column usable as an index)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<pre><code>'Aachen'</code></pre>
+</div>
+</div>
+<div id="b5053088-c5bd-446b-a191-6db5fe257157" class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>station_ids.iloc[:<span class="dv">5</span>] <span class="co">#slice 5 out of it</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Stationsname</th>
+<th data-quarto-table-cell-role="th">geogr. Breite</th>
+<th data-quarto-table-cell-role="th">geogr. Laenge</th>
+<th data-quarto-table-cell-role="th">Stationshoehe</th>
+<th data-quarto-table-cell-role="th">Bundesland</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Stations_id</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Aach</td>
+<td>47.841299</td>
+<td>8.849299</td>
+<td>478.0</td>
+<td>Baden-Württemberg</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Aachen (Kläranlage)</td>
+<td>50.806581</td>
+<td>6.099638</td>
+<td>138.0</td>
+<td>Nordrhein-Westfalen</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Aachen</td>
+<td>50.782659</td>
+<td>6.094087</td>
+<td>202.0</td>
+<td>Nordrhein-Westfalen</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Aachen-Brand</td>
+<td>50.768313</td>
+<td>6.120705</td>
+<td>243.0</td>
+<td>Nordrhein-Westfalen</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>Aalen-Unterrombach</td>
+<td>48.836072</td>
+<td>10.059764</td>
+<td>455.0</td>
+<td>Baden-Württemberg</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="38ad6855-3b39-46c2-bd17-213e726affdc" class="cell" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>station_ids.loc[:<span class="dv">1</span>:<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="54">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Stationsname</th>
+<th data-quarto-table-cell-role="th">geogr. Breite</th>
+<th data-quarto-table-cell-role="th">geogr. Laenge</th>
+<th data-quarto-table-cell-role="th">Stationshoehe</th>
+<th data-quarto-table-cell-role="th">Bundesland</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Stations_id</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Aach</td>
+<td>47.841299</td>
+<td>8.849299</td>
+<td>478.0</td>
+<td>Baden-Württemberg</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="368060b6-1a00-4165-b6d9-7667dab1bdce" class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>station_ids.loc[<span class="dv">3</span>,<span class="st">"Stationsname"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="55">
+<pre><code>'Aachen'</code></pre>
+</div>
+</div>
+<div id="671528f3-a9c7-4318-8a8a-425f33500bfc" class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>station_ids.loc[<span class="dv">3</span>:<span class="dv">6</span>,<span class="st">"Stationsname"</span>] <span class="co"># after slicing 5 is missing nows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="56">
+<pre><code>Stations_id
+3                Aachen
+4          Aachen-Brand
+6    Aalen-Unterrombach
+Name: Stationsname, dtype: str</code></pre>
+</div>
+</div>
+<div id="043fa260-fb7c-43e0-9e7a-246559688157" class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>station_ids.loc[<span class="st">"geogr. Breite"</span>:<span class="st">"geogr. Laenge"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Stationsname</th>
+<th data-quarto-table-cell-role="th">geogr. Breite</th>
+<th data-quarto-table-cell-role="th">geogr. Laenge</th>
+<th data-quarto-table-cell-role="th">Stationshoehe</th>
+<th data-quarto-table-cell-role="th">Bundesland</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Stations_id</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="47f3df1d-af5e-49d6-933a-292693afaf13" class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>station_ids[<span class="st">"Bundesland"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="58">
+<pre><code>Stations_id
+1          Baden-Württemberg
+2        Nordrhein-Westfalen
+3        Nordrhein-Westfalen
+4        Nordrhein-Westfalen
+6          Baden-Württemberg
+                ...         
+19697                 Bayern
+19698                Sachsen
+19701                 Bayern
+19706      Baden-Württemberg
+19781                 Bayern
+Name: Bundesland, Length: 5740, dtype: str</code></pre>
+</div>
+</div>
+<div id="d8150fc1-d000-4eed-992f-ffbcf3cc4b29" class="cell" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>station_ids.Bundesland <span class="co">#for names without space also possible</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="59">
+<pre><code>Stations_id
+1          Baden-Württemberg
+2        Nordrhein-Westfalen
+3        Nordrhein-Westfalen
+4        Nordrhein-Westfalen
+6          Baden-Württemberg
+                ...         
+19697                 Bayern
+19698                Sachsen
+19701                 Bayern
+19706      Baden-Württemberg
+19781                 Bayern
+Name: Bundesland, Length: 5740, dtype: str</code></pre>
+</div>
+</div>
+<div id="ea2d51ad-b24f-44c1-b12a-3bf5bc3e4417" class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>station_ids.groupby(<span class="st">"Bundesland"</span>).count().sort_values(<span class="st">"Stationsname"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># split dataset into groups (Bundesland), count the members of each group and sort by name</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="60">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Stationsname</th>
+<th data-quarto-table-cell-role="th">geogr. Breite</th>
+<th data-quarto-table-cell-role="th">geogr. Laenge</th>
+<th data-quarto-table-cell-role="th">Stationshoehe</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Bundesland</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Bremen</td>
+<td>15</td>
+<td>15</td>
+<td>15</td>
+<td>15</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Hamburg</td>
+<td>19</td>
+<td>19</td>
+<td>19</td>
+<td>19</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Berlin</td>
+<td>29</td>
+<td>29</td>
+<td>29</td>
+<td>29</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Saarland</td>
+<td>54</td>
+<td>54</td>
+<td>54</td>
+<td>54</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Schleswig-Holstein</td>
+<td>223</td>
+<td>223</td>
+<td>223</td>
+<td>223</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Mecklenburg-Vorpommern</td>
+<td>237</td>
+<td>237</td>
+<td>237</td>
+<td>237</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Rheinland-Pfalz</td>
+<td>264</td>
+<td>264</td>
+<td>264</td>
+<td>264</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Brandenburg</td>
+<td>302</td>
+<td>302</td>
+<td>302</td>
+<td>302</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Sachsen</td>
+<td>356</td>
+<td>356</td>
+<td>356</td>
+<td>356</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Thüringen</td>
+<td>391</td>
+<td>391</td>
+<td>391</td>
+<td>391</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Sachsen-Anhalt</td>
+<td>411</td>
+<td>411</td>
+<td>411</td>
+<td>411</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Hessen</td>
+<td>436</td>
+<td>436</td>
+<td>436</td>
+<td>436</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Nordrhein-Westfalen</td>
+<td>436</td>
+<td>436</td>
+<td>436</td>
+<td>436</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Niedersachsen</td>
+<td>611</td>
+<td>611</td>
+<td>611</td>
+<td>611</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Baden-Württemberg</td>
+<td>619</td>
+<td>619</td>
+<td>619</td>
+<td>619</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Bayern</td>
+<td>1337</td>
+<td>1337</td>
+<td>1337</td>
+<td>1337</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="46393bd1-7bed-44db-b7c8-beb6f4a1fa7b" class="cell" data-execution_count="108">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mask<span class="op">=</span>station_ids.Bundesland<span class="op">==</span><span class="st">"Bayern"</span> <span class="co">#when "Bayern" is true or false</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="739f108e-e7c0-4929-875b-156261147161" class="cell" data-execution_count="109">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>station_ids[mask]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="109">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Stationsname</th>
+<th data-quarto-table-cell-role="th">geogr. Breite</th>
+<th data-quarto-table-cell-role="th">geogr. Laenge</th>
+<th data-quarto-table-cell-role="th">Stationshoehe</th>
+<th data-quarto-table-cell-role="th">Bundesland</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">Stations_id</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>Abbach,Bad-Dünzling</td>
+<td>48.885697</td>
+<td>12.107925</td>
+<td>378.0</td>
+<td>Bayern</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>Abenberg</td>
+<td>49.234641</td>
+<td>10.966676</td>
+<td>391.5</td>
+<td>Bayern</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">16</td>
+<td>Abenberg-Wassermungenau</td>
+<td>49.219251</td>
+<td>10.884495</td>
+<td>370.0</td>
+<td>Bayern</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>Abensberg-Sandharlanden</td>
+<td>48.842100</td>
+<td>11.819366</td>
+<td>380.0</td>
+<td>Bayern</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">24</td>
+<td>Achthal</td>
+<td>47.833300</td>
+<td>12.783300</td>
+<td>582.0</td>
+<td>Bayern</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19694</td>
+<td>Tittmoning/Oberbayern</td>
+<td>48.066895</td>
+<td>12.763446</td>
+<td>382.0</td>
+<td>Bayern</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19695</td>
+<td>Untergriesbach/Niederbayern</td>
+<td>48.599508</td>
+<td>13.646542</td>
+<td>495.0</td>
+<td>Bayern</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19697</td>
+<td>Wassertrüdingen/Wörnitz</td>
+<td>49.046341</td>
+<td>10.602684</td>
+<td>435.0</td>
+<td>Bayern</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">19701</td>
+<td>Wertingen/Zusam</td>
+<td>48.557500</td>
+<td>10.674167</td>
+<td>430.0</td>
+<td>Bayern</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">19781</td>
+<td>Ingolstadt</td>
+<td>48.742909</td>
+<td>11.423324</td>
+<td>367.0</td>
+<td>Bayern</td>
+</tr>
+</tbody>
+</table>
+
+<p>1337 rows × 5 columns</p>
+</div>
+</div>
+</div>
+<div id="c61a6a81-3fd3-4e14-a889-57f30a6e3532" class="cell" data-execution_count="105">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>bayern<span class="op">=</span>station_ids[mask] <span class="co"># start a new subgroup assigned as bayern</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="1845800a-6cd2-480c-ba97-1915e44c2a39" class="cell" data-execution_count="106">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>station_ids.Bundesland.iloc[<span class="op">-</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="106">
+<pre><code>'Bayern'</code></pre>
+</div>
+</div>
+<div id="86e70e44-db3b-4adf-8e65-fe0afb27aacd" class="cell" data-execution_count="107">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>bayern.loc[<span class="dv">17</span>] <span class="co">#show position 17</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="107">
+<pre><code>Stationsname     Abensberg-Sandharlanden
+geogr. Breite                    48.8421
+geogr. Laenge                  11.819366
+Stationshoehe                      380.0
+Bundesland                        Bayern
+Name: 17, dtype: object</code></pre>
+</div>
+</div>
+<section id="precipitation-data-exercise-alexanderplatz-and-follow-up" class="level2">
+<h2 class="anchored" data-anchor-id="precipitation-data-exercise-alexanderplatz-and-follow-up">Precipitation Data (exercise Alexanderplatz and follow up)</h2>
+<p>get a list of stations in Berlin<br>
+figure out the station ID of Berlin Alexanderplatz<br>
+load the 30 year mean precipitation data “data/Niederschlag 1981-2010.txt”<br>
+only keep the columns with the monthly means</p>
+<div id="20149fe3-b45b-4565-9e48-8342de6a242a" class="cell" data-execution_count="82">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>precip_ref <span class="op">=</span> pandas.read_csv(<span class="st">"data/Niederschlag_1981-2010.txt"</span>, <span class="co"># get all precipitation</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>                              encoding<span class="op">=</span><span class="st">"iso-8859-1"</span>, delimiter<span class="op">=</span><span class="st">" *; *"</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                             index_col<span class="op">=</span><span class="st">"Stations_id"</span>, engine<span class="op">=</span><span class="st">"python"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="abdb0735-2bea-4e31-b08e-8c5082a2c38b" class="cell" data-execution_count="83">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>precip_ref <span class="op">=</span> precip_ref.loc[:,<span class="st">"Jan."</span>:<span class="st">"Dez."</span>] <span class="co">#get monthly mean precipitation</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cae45b08-0df2-4feb-98c6-e7401205d8b0" class="cell" data-execution_count="84">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>precip_ref.loc[<span class="dv">399</span>] <span class="co"># monthly mean precipitation on Berlin Alexanderplatz (ID=399)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="84">
+<pre><code>Jan.     49.0
+Feb.     40.0
+März     45.0
+Apr.     34.0
+Mai      56.0
+Jun.     60.0
+Jul.     64.0
+Aug.     58.0
+Sept.    46.0
+Okt.     39.0
+Nov.     47.0
+Dez.     53.0
+Name: 399, dtype: float64</code></pre>
+</div>
+</div>
+<div id="2f2ba2d2-5e5c-438e-9f9e-4cc2b0341beb" class="cell" data-execution_count="85">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>precip_ref.loc[<span class="dv">399</span>].plot.bar()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session5_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="0e0b4ba4-994b-44f9-a0de-eb56a1dfa014" class="cell" data-execution_count="73">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>precip <span class="op">=</span> pandas.read_csv(<span class="st">"data/produkt_precipitation_399_akt.txt"</span>,</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>                              encoding<span class="op">=</span><span class="st">"iso-8859-1"</span>, delimiter<span class="op">=</span><span class="st">" *; *"</span>,</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                              engine<span class="op">=</span><span class="st">"python"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="1e8e0756-cafd-48ef-b8d4-12cd80a880f6" class="cell" data-execution_count="74">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>precip.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="74">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">STATIONS_ID</th>
+<th data-quarto-table-cell-role="th">MESS_DATUM</th>
+<th data-quarto-table-cell-role="th">QUALITAETS_NIVEAU</th>
+<th data-quarto-table-cell-role="th">STRUKTUR_VERSION</th>
+<th data-quarto-table-cell-role="th">NIEDERSCHLAGSHOEHE</th>
+<th data-quarto-table-cell-role="th">eor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>399</td>
+<td>2015082001</td>
+<td>3</td>
+<td>0</td>
+<td>0.0</td>
+<td>eor</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>399</td>
+<td>2015082002</td>
+<td>3</td>
+<td>0</td>
+<td>0.0</td>
+<td>eor</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>399</td>
+<td>2015082003</td>
+<td>3</td>
+<td>0</td>
+<td>0.0</td>
+<td>eor</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>399</td>
+<td>2015082004</td>
+<td>3</td>
+<td>0</td>
+<td>0.0</td>
+<td>eor</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>399</td>
+<td>2015082005</td>
+<td>3</td>
+<td>0</td>
+<td>0.0</td>
+<td>eor</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="2046f397-de17-4290-8201-2b26d9a8b596" class="cell" data-execution_count="76">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>precip[<span class="st">"date_time"</span>]<span class="op">=</span>pandas.to_datetime(precip.MESS_DATUM, <span class="bu">format</span><span class="op">=</span><span class="st">"%Y%m</span><span class="sc">%d</span><span class="st">%H"</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co">#take the column and convert the numbers into the given data format (we overwrite the column)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="390b0e9f-4c2d-4a52-91fa-d8707c3b94e6" class="cell" data-execution_count="77">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>precip_alex<span class="op">=</span>precip[[<span class="st">"date_time"</span>, <span class="st">"NIEDERSCHLAGSHOEHE"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ca2ccf31-5008-42bc-b3aa-fa9ec558cf79" class="cell" data-execution_count="78">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>precip_alex<span class="op">=</span>precip_alex.rename(columns<span class="op">=</span>{<span class="st">"date_time"</span> : <span class="st">"date"</span>,</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"NIEDERSCHLAGSHOEHE"</span> : <span class="st">"precipitation"</span>})</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co"># rename the columns and overwrite the previous precip_alex</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="9ab76265-2b10-434f-a99a-4df3645ccbe7" class="cell" data-execution_count="79">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>precip_alex<span class="op">=</span>precip_alex.set_index(<span class="st">"date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="59348cd9-13b0-4ec9-8264-604091f2ab91" class="cell" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>precip_alex.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session5_files/figure-html/cell-37-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="38f05905-73db-4352-a7f3-717f481ca496" class="cell" data-execution_count="101">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>monthly <span class="op">=</span> precip_alex.resample(<span class="st">"ME"</span>).<span class="bu">sum</span>() <span class="co"># ME=monthly</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="1d2393f4-49a4-4ddc-adcb-aee95ea22c08" class="cell" data-execution_count="102">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>monthly.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="102">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">precipitation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>129.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>39.528372</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>28.812164</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>22.910000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>33.640000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>48.600000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>166.300000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="3a659032-cfa1-4319-9276-5be93135d287" class="cell" data-execution_count="120">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>precip_ref.loc[<span class="dv">399</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="120">
+<pre><code>Jan.     49.0
+Feb.     40.0
+März     45.0
+Apr.     34.0
+Mai      56.0
+Jun.     60.0
+Jul.     64.0
+Aug.     58.0
+Sept.    46.0
+Okt.     39.0
+Nov.     47.0
+Dez.     53.0
+Name: 399, dtype: float64</code></pre>
+</div>
+</div>
+<div id="0df4c7f8-4704-4a0f-a86b-d5aaec0f24ee" class="cell" data-execution_count="121">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>monthly.groupby(monthly.index.month).describe() <span class="co">#for each year groups our data by month </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="121">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th colspan="8" data-quarto-table-cell-role="th" data-halign="left">precipitation</th>
+<th colspan="5" data-quarto-table-cell-role="th" data-halign="left">climate</th>
+<th colspan="8" data-quarto-table-cell-role="th" data-halign="left">anomaly</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">std</th>
+<th data-quarto-table-cell-role="th">min</th>
+<th data-quarto-table-cell-role="th">25%</th>
+<th data-quarto-table-cell-role="th">50%</th>
+<th data-quarto-table-cell-role="th">75%</th>
+<th data-quarto-table-cell-role="th">max</th>
+<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">75%</th>
+<th data-quarto-table-cell-role="th">max</th>
+<th data-quarto-table-cell-role="th">count</th>
+<th data-quarto-table-cell-role="th">mean</th>
+<th data-quarto-table-cell-role="th">std</th>
+<th data-quarto-table-cell-role="th">min</th>
+<th data-quarto-table-cell-role="th">25%</th>
+<th data-quarto-table-cell-role="th">50%</th>
+<th data-quarto-table-cell-role="th">75%</th>
+<th data-quarto-table-cell-role="th">max</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">1</td>
+<td>11.0</td>
+<td>43.080909</td>
+<td>14.963813</td>
+<td>19.80</td>
+<td>33.0000</td>
+<td>45.530</td>
+<td>51.7750</td>
+<td>69.42</td>
+<td>11.0</td>
+<td>49.0</td>
+<td>...</td>
+<td>49.0</td>
+<td>49.0</td>
+<td>11.0</td>
+<td>-5.919091</td>
+<td>14.963813</td>
+<td>-29.20</td>
+<td>-16.0000</td>
+<td>-3.470</td>
+<td>2.7750</td>
+<td>20.42</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2</td>
+<td>11.0</td>
+<td>38.052727</td>
+<td>19.801915</td>
+<td>3.24</td>
+<td>24.7600</td>
+<td>39.990</td>
+<td>48.1950</td>
+<td>75.33</td>
+<td>11.0</td>
+<td>40.0</td>
+<td>...</td>
+<td>40.0</td>
+<td>40.0</td>
+<td>11.0</td>
+<td>-1.947273</td>
+<td>19.801915</td>
+<td>-36.76</td>
+<td>-15.2400</td>
+<td>-0.010</td>
+<td>8.1950</td>
+<td>35.33</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>11.0</td>
+<td>26.577273</td>
+<td>16.599816</td>
+<td>1.02</td>
+<td>14.3900</td>
+<td>27.990</td>
+<td>39.2900</td>
+<td>51.87</td>
+<td>11.0</td>
+<td>45.0</td>
+<td>...</td>
+<td>45.0</td>
+<td>45.0</td>
+<td>11.0</td>
+<td>-18.422727</td>
+<td>16.599816</td>
+<td>-43.98</td>
+<td>-30.6100</td>
+<td>-17.010</td>
+<td>-5.7100</td>
+<td>6.87</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>11.0</td>
+<td>26.310909</td>
+<td>15.251537</td>
+<td>1.41</td>
+<td>17.0500</td>
+<td>29.420</td>
+<td>35.6550</td>
+<td>47.56</td>
+<td>11.0</td>
+<td>34.0</td>
+<td>...</td>
+<td>34.0</td>
+<td>34.0</td>
+<td>11.0</td>
+<td>-7.689091</td>
+<td>15.251537</td>
+<td>-32.59</td>
+<td>-16.9500</td>
+<td>-4.580</td>
+<td>1.6550</td>
+<td>13.56</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5</td>
+<td>10.0</td>
+<td>30.115000</td>
+<td>17.810316</td>
+<td>10.03</td>
+<td>25.2225</td>
+<td>27.720</td>
+<td>33.1750</td>
+<td>74.44</td>
+<td>10.0</td>
+<td>56.0</td>
+<td>...</td>
+<td>56.0</td>
+<td>56.0</td>
+<td>10.0</td>
+<td>-25.885000</td>
+<td>17.810316</td>
+<td>-45.97</td>
+<td>-30.7775</td>
+<td>-28.280</td>
+<td>-22.8250</td>
+<td>18.44</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6</td>
+<td>10.0</td>
+<td>62.480000</td>
+<td>46.832982</td>
+<td>22.91</td>
+<td>34.4625</td>
+<td>42.310</td>
+<td>74.5300</td>
+<td>166.30</td>
+<td>10.0</td>
+<td>60.0</td>
+<td>...</td>
+<td>60.0</td>
+<td>60.0</td>
+<td>10.0</td>
+<td>2.480000</td>
+<td>46.832982</td>
+<td>-37.09</td>
+<td>-25.5375</td>
+<td>-17.690</td>
+<td>14.5300</td>
+<td>106.30</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">7</td>
+<td>10.0</td>
+<td>71.625000</td>
+<td>43.327513</td>
+<td>27.16</td>
+<td>35.3325</td>
+<td>55.925</td>
+<td>106.2875</td>
+<td>136.10</td>
+<td>10.0</td>
+<td>64.0</td>
+<td>...</td>
+<td>64.0</td>
+<td>64.0</td>
+<td>10.0</td>
+<td>7.625000</td>
+<td>43.327513</td>
+<td>-36.84</td>
+<td>-28.6675</td>
+<td>-8.075</td>
+<td>42.2875</td>
+<td>72.10</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">8</td>
+<td>11.0</td>
+<td>30.906364</td>
+<td>21.515000</td>
+<td>4.12</td>
+<td>20.4300</td>
+<td>27.030</td>
+<td>35.8800</td>
+<td>74.27</td>
+<td>11.0</td>
+<td>58.0</td>
+<td>...</td>
+<td>58.0</td>
+<td>58.0</td>
+<td>11.0</td>
+<td>-27.093636</td>
+<td>21.515000</td>
+<td>-53.88</td>
+<td>-37.5700</td>
+<td>-30.970</td>
+<td>-22.1200</td>
+<td>16.27</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9</td>
+<td>11.0</td>
+<td>27.925455</td>
+<td>15.035998</td>
+<td>1.70</td>
+<td>20.0650</td>
+<td>29.190</td>
+<td>36.3100</td>
+<td>53.48</td>
+<td>11.0</td>
+<td>46.0</td>
+<td>...</td>
+<td>46.0</td>
+<td>46.0</td>
+<td>11.0</td>
+<td>-18.074545</td>
+<td>15.035998</td>
+<td>-44.30</td>
+<td>-25.9350</td>
+<td>-16.810</td>
+<td>-9.6900</td>
+<td>7.48</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">10</td>
+<td>11.0</td>
+<td>40.480909</td>
+<td>32.242088</td>
+<td>0.00</td>
+<td>19.8100</td>
+<td>32.090</td>
+<td>58.9950</td>
+<td>95.41</td>
+<td>11.0</td>
+<td>39.0</td>
+<td>...</td>
+<td>39.0</td>
+<td>39.0</td>
+<td>11.0</td>
+<td>1.480909</td>
+<td>32.242088</td>
+<td>-39.00</td>
+<td>-19.1900</td>
+<td>-6.910</td>
+<td>19.9950</td>
+<td>56.41</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">11</td>
+<td>11.0</td>
+<td>39.063636</td>
+<td>25.046306</td>
+<td>0.00</td>
+<td>17.9900</td>
+<td>38.760</td>
+<td>58.7200</td>
+<td>70.93</td>
+<td>11.0</td>
+<td>47.0</td>
+<td>...</td>
+<td>47.0</td>
+<td>47.0</td>
+<td>11.0</td>
+<td>-7.936364</td>
+<td>25.046306</td>
+<td>-47.00</td>
+<td>-29.0100</td>
+<td>-8.240</td>
+<td>11.7200</td>
+<td>23.93</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">12</td>
+<td>11.0</td>
+<td>41.870909</td>
+<td>30.349011</td>
+<td>0.00</td>
+<td>24.3400</td>
+<td>39.200</td>
+<td>50.5300</td>
+<td>119.06</td>
+<td>11.0</td>
+<td>53.0</td>
+<td>...</td>
+<td>53.0</td>
+<td>53.0</td>
+<td>11.0</td>
+<td>-11.129091</td>
+<td>30.349011</td>
+<td>-53.00</td>
+<td>-28.6600</td>
+<td>-13.800</td>
+<td>-2.4700</td>
+<td>66.06</td>
+</tr>
+</tbody>
+</table>
+
+<p>12 rows × 24 columns</p>
+</div>
+</div>
+</div>
+<div id="1c7556c4-aba3-4705-b24f-5c3438b1c559" class="cell" data-execution_count="122">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>monthly.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session5_files/figure-html/cell-42-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="17fe63c0-ff39-4122-b4c3-3233ed6871e9" class="cell" data-execution_count="123">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>refs<span class="op">=</span>pandas.DataFrame({<span class="st">"precipitation"</span>:precip_ref.loc[<span class="dv">399</span>].to_list()<span class="op">*</span><span class="dv">12</span>},</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>                      index<span class="op">=</span>pandas.date_range(<span class="st">"2015-01-01"</span>, <span class="st">"2026-12-31"</span>, freq<span class="op">=</span><span class="st">"ME"</span>))</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create a new DataFrame with only one column: precipitation</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co"># from climate data grab Alexanderplatz and convert it to a list, repeat this 12 times</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="173cb24c-e68e-4cbb-b363-efd774ed130c" class="cell" data-execution_count="124">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>refs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="124">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">precipitation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2015-01-31</td>
+<td>49.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2015-02-28</td>
+<td>40.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2015-03-31</td>
+<td>45.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2015-04-30</td>
+<td>34.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2015-05-31</td>
+<td>56.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2026-08-31</td>
+<td>58.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2026-09-30</td>
+<td>46.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2026-10-31</td>
+<td>39.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2026-11-30</td>
+<td>47.0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2026-12-31</td>
+<td>53.0</td>
+</tr>
+</tbody>
+</table>
+
+<p>144 rows × 1 columns</p>
+</div>
+</div>
+</div>
+<div id="406fc3c9-40a3-43f4-bd7b-f8571dd44031" class="cell" data-execution_count="125">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>monthly[<span class="st">"climate"</span>] <span class="op">=</span> refs <span class="co"># create a new column: climate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b378f35d-b5a7-45c4-8ad7-a304fddb03c7" class="cell" data-execution_count="126">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>monthly</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="126">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">precipitation</th>
+<th data-quarto-table-cell-role="th">climate</th>
+<th data-quarto-table-cell-role="th">anomaly</th>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2015-08-31</td>
+<td>18.90</td>
+<td>58.0</td>
+<td>-39.10</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2015-09-30</td>
+<td>29.19</td>
+<td>46.0</td>
+<td>-16.81</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2015-10-31</td>
+<td>60.91</td>
+<td>39.0</td>
+<td>21.91</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2015-11-30</td>
+<td>58.59</td>
+<td>47.0</td>
+<td>11.59</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2015-12-31</td>
+<td>27.34</td>
+<td>53.0</td>
+<td>-25.66</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2025-12-31</td>
+<td>18.73</td>
+<td>53.0</td>
+<td>-34.27</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2026-01-31</td>
+<td>19.80</td>
+<td>49.0</td>
+<td>-29.20</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2026-02-28</td>
+<td>48.08</td>
+<td>40.0</td>
+<td>8.08</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2026-03-31</td>
+<td>12.36</td>
+<td>45.0</td>
+<td>-32.64</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2026-04-30</td>
+<td>4.00</td>
+<td>34.0</td>
+<td>-30.00</td>
+</tr>
+</tbody>
+</table>
+
+<p>129 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<div id="be5e3824-db82-4abe-bc4f-5d22d115a5da" class="cell" data-execution_count="127">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>monthly.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session5_files/figure-html/cell-47-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="3737f36a-266a-467a-9b16-29d1e67e1558" class="cell" data-execution_count="128">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>monthly[<span class="st">"anomaly"</span>]<span class="op">=</span>monthly.precipitation <span class="op">-</span> monthly.climate</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co">#to just get the defference between the general mean precipitation and the mean precipitation on Alexanderplatz</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="de3ff655-bb37-408e-9ecc-7e54acc803d6" class="cell" data-execution_count="119">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>monthly.anomaly.plot()</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co"># many spikes in minus-area, so Berlin is dryer</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="session5_files/figure-html/cell-49-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
