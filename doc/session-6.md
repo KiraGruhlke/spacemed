@@ -1,0 +1,2 @@
+In session 6 we organized the work we did the last 5 sessions, e.g. by creating new file directories. Afterwards we reevaluted the code from session 4:
+We rewrote the code to plot Pulseoxymetry data, detect peaks and calculate heart rate using functions. These functions were stored, so we don't need to rewrite or copy-paste the whole code, but in any new project can just call the functions. We stored them in a new python package (directory), set it all up and included semantic versioning.

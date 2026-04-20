@@ -115,14 +115,9 @@ pyplot.xlabel("time [s]")
 # $$H = \frac{T}{\Delta T_{\text{peaks}}}$$
 
 # %%
+# transform lists into arrays
 absorption = numpy.array(absorption)
 time = numpy.array(time)
-
-# %%
-w=50 # w = window (compare a point to the points around)
-
-# %%
-data = absorption # now the subset is the whole data set. to practice you can e.g. choose the subset until 1000
 
 
 # %%
@@ -145,8 +140,8 @@ print (find_peaks(absorption, 50)) # call the function
 peaks = find_peaks(absorption, 50) # define naming to make plot work
 
 # %%
-pyplot.plot(data)
-pyplot.plot(peaks, data[peaks], "ro")
+pyplot.plot(absorption)
+pyplot.plot(peaks, absorption[peaks], "ro")
 
 
 # %%
