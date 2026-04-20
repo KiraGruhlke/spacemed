@@ -8,13 +8,13 @@
 #       format_version: '1.3'
 #       jupytext_version: 1.16.1
 #   kernelspec:
-#     display_name: Python [conda env:conda_envs-compute-conda]
+#     display_name: Python [conda env:.conda-spacemed26]
 #     language: python
-#     name: conda-env-conda_envs-compute-conda-py
+#     name: conda-env-.conda-spacemed26-py
 # ---
 
 # %% [raw]
-# title: "Session 5: Reproducible Documents"
+# title: "Session 6"
 # author: Kira Gruhlke
 # format:
 #   html:
@@ -40,17 +40,33 @@
 # $v_e$ in m/s.
 # $$
 # \frac{dv}{dt} = -\frac{F}{m(t)} = -\frac{Rv_e}{m(t)}
-# $$ {#eq-rocket-acc}
-# Integrating both sides of @eq-rocket-acc from 0
-# to $T$ we get
+# $$
 
 # %%
 # in between the $$ in Markdown, there is a maths-term
 # backslash frac gives a fraction
 
 # %% [markdown]
+# # Notes Session 6
+
+# %%
+def sum_prod(a,b,c=1):
+    return c*(a+b)
+
+
+# %%
+sum_prod(c=1, a=2, b=2)
+
+# %%
+name="Kira"
+age="28"
+
+# %%
+print (name, age, sep=" is ")
+
+# %% [markdown]
 # # Reading a Data file and plotting
-# *Copy from session 3 to use for session 4*
+# *Copy from session 4 to use for session 6*
 
 # %% [markdown]
 # ## Import needed files
@@ -59,27 +75,27 @@
 import numpy # import needed files first
 from matplotlib import pyplot #import from matplotlib the function for this code
 
+
 # %% [markdown]
 # ## Open the files and read it, so it is usable
 
 # %%
-#create lists
-time= []
-absorption=[]
+# input = name of the file, output = time and absorption
+# now this cell is a function in itself
+def read_pulse (fname):
+    dataFile = open(fname)
+    time= []
+    absorption=[]
+    dataFile.readline()
+    for line in dataFile.readlines() :
+        line=line.split(",")
+        time.append(float(line[0]))
+        absorption.append(float(line[1]))
+    return time, absorption
+
 
 # %%
-dataFile=open("data/pulse_data.csv")
-
-# %%
-# !pwd #where am I
-
-# %%
-dataFile.readline() # if we run this, we read a line and then discard it, so jump to the next line
-for line in dataFile.readlines() : # now the for loop starts with the second line
-    line=line.split(",") #split at the comma
-    time.append(float(line[0])) # 0 = before the comma; float because it would have been a string and you cannot plot strings, but floats
-    absorption.append(float(line[1])) # 1 = after the comma
-# if I reexecude the loop later, I might already be in the wrong line of the file
+time, absorption =read_pulse ("../data/pulse_data.csv") # call the function and open the according dataset, so it can run
 
 # %% [markdown]
 # ## Basic Plot
@@ -206,4 +222,5 @@ tp=time[peaks]
 # %%
 tp[1:]-tp[:-1] # = delta t
 
-# %%
+# %% [markdown]
+#
