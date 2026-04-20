@@ -32,29 +32,23 @@
 # %%
 # the first cell provides metadata (raw cell)
 
-# %% [markdown]
-# # Rocket Equation
-# At time $t_0$ to rocket starts to expel gas at a
-# _constant mass flow rate_ $R$ meassured in kg/s
-# and _exhaust velocity relative to the rocket_
-# $v_e$ in m/s.
-# $$
-# \frac{dv}{dt} = -\frac{F}{m(t)} = -\frac{Rv_e}{m(t)}
-# $$
-
 # %%
-# in between the $$ in Markdown, there is a maths-term
-# backslash frac gives a fraction
+# automatically reload any packages that have changes
+# %load_ext autoreload
+# %autoreload 2
 
 # %% [markdown]
 # # Notes Session 6
 
 # %%
+# create a new function (def) called sum_prod
+# tell it what to do and to return the result
 def sum_prod(a,b,c=1):
     return c*(a+b)
 
 
 # %%
+# example
 sum_prod(c=1, a=2, b=2)
 
 # %%
@@ -75,13 +69,20 @@ print (name, age, sep=" is ")
 import numpy # import needed files first
 from matplotlib import pyplot #import from matplotlib the function for this code
 
+# %%
+import spacemed
+
+# %%
+spacemed.__version__
+
 
 # %% [markdown]
-# ## Open the files and read it, so it is usable
+# ## Create a function to open and look at the data
 
 # %%
 # input = name of the file, output = time and absorption
 # now this cell is a function in itself
+# check connotations on the function itself in session4
 def read_pulse (fname):
     dataFile = open(fname)
     time= []
@@ -108,42 +109,6 @@ pyplot.plot(time, absorption)
 pyplot.xlabel("time [s]")
 
 # %% [markdown]
-# # Python Arrays
-
-# %%
-a=numpy.arange(10)+1
-
-# %%
-a.shape
-
-# %%
-a.dtype
-
-# %%
-a.nbytes
-
-# %%
-b=numpy.array([[1,2,3],[4,5,6]])
-
-# %%
-b.shape
-
-# %%
-b.T @ b
-
-# %%
-a.T@ a # @= Vektorprodukt
-
-# %%
-a
-
-# %%
-numpy.max(a) # tells the biggest number
-
-# %%
-numpy.argmax(a) # tells the maximum position (starting at 0)
-
-# %% [markdown]
 # ## Calculate pulse rate
 
 # %% [markdown]
@@ -157,70 +122,46 @@ time = numpy.array(time)
 w=50 # w = window (compare a point to the points around)
 
 # %%
-subset = absorption # now the subset is the whole data set. to practice you can e.g. choose the subset until 1000
+data = absorption # now the subset is the whole data set. to practice you can e.g. choose the subset until 1000
+
 
 # %%
-peaks = []
-for i in range (len(subset)): # the window moves along the dataset
-    start = max(i-w, 0) # the point before is lower (i-w), 0 to include start of data
-    end = min(i+w, len(subset)) # len(subset) to include the end of data
-    window = subset[start:end]
-    max_pos = numpy.argmax(window) + start # gives us the position inside the window, where the maximum is
-    if i == max_pos:
-        peaks.append(i)
-print(peaks)
+def find_peaks (data, w):
+    peaks = []
+    for i in range (len(data)): # the window moves along the dataset
+        start = max(i-w, 0) # the point before is lower (i-w), 0 to include start of data
+        end = min(i+w, len(data)) # len(subset) to include the end of data
+        window = data[start:end]
+        max_pos = numpy.argmax(window) + start # gives us the position inside the window, where the maximum is
+        if i == max_pos:
+            peaks.append(i)
+    return peaks
+
 
 # %%
-pyplot.plot(subset)
-pyplot.plot(peaks, subset[peaks], "ro")
+print (find_peaks(absorption, 50)) # call the function
 
 # %%
-time_peaks = time[peaks]
+peaks = find_peaks(absorption, 50) # define naming to make plot work
 
 # %%
-delta_t = time_peaks[1:] -time_peaks[:-1]
+pyplot.plot(data)
+pyplot.plot(peaks, data[peaks], "ro")
+
 
 # %%
-hr = 60/ delta_t
+def calc_heart_rate (time, peaks):
+        time_peaks = time[peaks]
+        delta_t = time_peaks[1:] -time_peaks[:-1]
+        hr = 60/ delta_t
+        return hr
+
+
+# %%
+print (calc_heart_rate(time, peaks)) # call the function
+
+# %%
+hr = calc_heart_rate(time, peaks) # define naming to make plot work
 
 # %%
 pyplot.plot(hr)
-
-# %% [markdown]
-# ### Connotations
-
-# %% [markdown]
-# #### Graph with peaks
-
-# %%
-test = numpy.arange(20)
-
-# %%
-test
-
-# %%
-s= test[5:10] # create a subset
-
-# %%
-s
-
-# %% [markdown]
-# => the index of numbers in our window does change and not match the index in the whole array, so we need to add the lower bound of our subset (+ start in max_pos above)
-
-# %% [markdown]
-# #### Graph heart rate
-
-# %%
-peaks # to get a list of peaks
-
-# %%
-time[peaks] #create an array of time
-
-# %%
-tp=time[peaks]
-
-# %%
-tp[1:]-tp[:-1] # = delta t
-
-# %% [markdown]
-#

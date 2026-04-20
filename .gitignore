@@ -1,4 +1,6 @@
 *.tar.gz
 *.zip
 .ipynb_checkpoints
+**/__pycache__/
+*.egg-info/
 
