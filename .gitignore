@@ -3,4 +3,6 @@
 .ipynb_checkpoints
 **/__pycache__/
 *.egg-info/
+notebooks/session6-Copy.ipynb
+notebooks/session6-Copy.py
 
