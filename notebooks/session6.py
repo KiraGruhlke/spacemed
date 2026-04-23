@@ -75,28 +75,11 @@ import spacemed
 # %%
 spacemed.__version__
 
-
 # %% [markdown]
 # ## Create a function to open and look at the data
 
 # %%
-# input = name of the file, output = time and absorption
-# now this cell is a function in itself
-# check connotations on the function itself in session4
-def read_pulse (fname):
-    dataFile = open(fname)
-    time= []
-    absorption=[]
-    dataFile.readline()
-    for line in dataFile.readlines() :
-        line=line.split(",")
-        time.append(float(line[0]))
-        absorption.append(float(line[1]))
-    return time, absorption
-
-
-# %%
-time, absorption =read_pulse ("../data/pulse_data.csv") # call the function and open the according dataset, so it can run
+time, absorption =spacemed.read_pulse ("../data/pulse_data.csv") # call the function and open the according dataset, so it can run
 
 # %% [markdown]
 # ## Basic Plot
@@ -119,41 +102,24 @@ pyplot.xlabel("time [s]")
 absorption = numpy.array(absorption)
 time = numpy.array(time)
 
+# %%
+peaks = spacemed.find_peaks ("../data/pulse_data.csv",w=50) #call the function to detect peaks
 
 # %%
-def find_peaks (data, w):
-    peaks = []
-    for i in range (len(data)): # the window moves along the dataset
-        start = max(i-w, 0) # the point before is lower (i-w), 0 to include start of data
-        end = min(i+w, len(data)) # len(subset) to include the end of data
-        window = data[start:end]
-        max_pos = numpy.argmax(window) + start # gives us the position inside the window, where the maximum is
-        if i == max_pos:
-            peaks.append(i)
-    return peaks
-
+print (spacemed.find_peaks(absorption, 50)) # print results
 
 # %%
-print (find_peaks(absorption, 50)) # call the function
-
-# %%
-peaks = find_peaks(absorption, 50) # define naming to make plot work
+peaks = spacemed.find_peaks(absorption, 50) # define naming to make plot work
 
 # %%
 pyplot.plot(absorption)
 pyplot.plot(peaks, absorption[peaks], "ro")
 
+# %%
+heart_rate = spacemed.calc_heart_rate ("../data/pulse_data.csv", time, peaks) # call the function to calculate heart rate
 
 # %%
-def calc_heart_rate (time, peaks):
-        time_peaks = time[peaks]
-        delta_t = time_peaks[1:] -time_peaks[:-1]
-        hr = 60/ delta_t
-        return hr
-
-
-# %%
-print (calc_heart_rate(time, peaks)) # call the function
+print (calc_heart_rate(time, peaks)) # print results
 
 # %%
 hr = calc_heart_rate(time, peaks) # define naming to make plot work

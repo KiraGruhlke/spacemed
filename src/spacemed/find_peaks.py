@@ -1,3 +1,4 @@
+import numpy
 def find_peaks (data, w):
     peaks = []
     for i in range (len(data)): # the window moves along the dataset
