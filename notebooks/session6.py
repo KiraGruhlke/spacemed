@@ -116,13 +116,17 @@ pyplot.plot(absorption)
 pyplot.plot(peaks, absorption[peaks], "ro")
 
 # %%
-heart_rate = spacemed.calc_heart_rate ("../data/pulse_data.csv", time, peaks) # call the function to calculate heart rate
+peaks = spacemed.find_peaks(absorption, 50)
 
 # %%
-print (calc_heart_rate(time, peaks)) # print results
+peaks = numpy.array(peaks)
+time = numpy.array(time)
 
 # %%
-hr = calc_heart_rate(time, peaks) # define naming to make plot work
+heart_rate = spacemed.calc_heart_rate (time, peaks) # call the function to calculate heart rate
 
 # %%
-pyplot.plot(hr)
+print (heart_rate) # print results
+
+# %%
+pyplot.plot(heart_rate)
