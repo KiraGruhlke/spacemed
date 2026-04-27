@@ -63,6 +63,10 @@ print (name, age, sep=" is ")
 # *Copy from session 4 to use for session 6*
 
 # %% [markdown]
+# This is the notebook of session 6 of the SpaceMed Digital Literacy course 2026. 
+# In this notebook data from a pulse oxymetry sensor is analyzed and plotted: Peaks are detected and based on these heart rate (in this case = pulse rate) is calculated und plotted.
+
+# %% [markdown]
 # ## Import needed files
 
 # %%
