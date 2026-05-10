@@ -3,4 +3,3 @@ from . load_pulse import read_pulse # noqa
 from . find_peaks import find_peaks # noqa
 from . calc_heart_rate import calc_heart_rate # noqa
 from . compute_crosscorrelation import compute_crosscorrelation #noqa
-from . process_slice.py import process_slice.py #noqa
