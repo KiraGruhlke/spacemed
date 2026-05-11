@@ -5,4 +5,5 @@
 *.egg-info/
 notebooks/session6-Copy.ipynb
 notebooks/session6-Copy.py
+data/fmri-data/
 

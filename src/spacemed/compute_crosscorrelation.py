@@ -1,0 +1,12 @@
+import numpy
+import scipy.signal
+from .normalise_data import normalise
+
+def compute_crosscorrelation(fmri_data, signal, p):
+    data = fmri_data[p]
+    cross = scipy.signal.correlate(
+    # show cross correlation to not just eyeball it 
+        normalise(data), normalise(signal),
+        mode="same")
+    c = numpy.max(cross) # maximal cross correlation
+    print(c)
