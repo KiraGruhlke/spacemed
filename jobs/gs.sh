@@ -15,4 +15,4 @@ mkdir -p logs
 pwd
 source /etc/profile.d/conda.sh
 conda activate spacemed26
-python generate_slices.py /home/kigr11/Spacemed-2026/kigr11/src/spacemed/generate_slices-py home/kigr11/Spacemed-2026/kigr11/data/fmri-data/2_Anatomy_1mm_5min.nii
+python /home/kigr11/Spacemed-2026/kigr11/src/spacemed/generate_slices-py home/kigr11/Spacemed-2026/kigr11/data/fmri-data/2_Anatomy_1mm_5min.nii
