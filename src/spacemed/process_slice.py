@@ -10,17 +10,23 @@ def normalise(data):
     # Protection against dividing by zero for empty background voxels
     if std_val == 0:
         return numpy.zeros_like(data)
-    norm = (data - numpy.mean(data))
+    norm = data - numpy.mean(data)
     norm = norm / std_val
     return norm
 
 
 def main():
     # 1. Set up command line arguments
-    parser = argparse.ArgumentParser(description="Compute cross-correlation for one fMRI slice.")
+    parser = argparse.ArgumentParser(
+        description="Compute cross-correlation for one fMRI slice."
+    )
     parser.add_argument("fmri_file", help="name of fMRI file")
-    parser.add_argument("slice_num", type=int, help="the slice to process (an integer)")
-    parser.add_argument("output_image", help="the name of the output image file")
+    parser.add_argument(
+        "slice_num", type=int, help="the slice to process (an integer)"
+    )
+    parser.add_argument(
+        "output_image", help="the name of the output image file"
+    )
     args = parser.parse_args()
 
     # 2. Load the fMRI data
@@ -42,12 +48,18 @@ def main():
     x_dim = fmri_data.shape[0]
     y_dim = fmri_data.shape[1]
 
-    # Verify the requested slice is within bounds
+    # Verify the requested slice is within bs
     if z_slice < 0 or z_slice >= fmri_data.shape[2]:
-        print(f"Error: Slice {z_slice} is out of bounds. Must be between 0 and {fmri_data.shape[2] - 1}")
+        print(
+            f"Error: Slice {z_slice} is out of bounds. "
+            f"Must be between 0 and {fmri_data.shape[2] - 1}"
+        )
         return
 
-    print(f"Processing cross-correlation for slice {z_slice}. This may take a moment...")
+    print(
+        f"Processing cross-correlation for slice {z_slice}. "
+        f"This may take a moment..."
+    )
     cross_corr_map = numpy.zeros((x_dim, y_dim))
 
     # 5. Compute cross-correlation for every voxel in the slice
@@ -59,8 +71,8 @@ def main():
             # Skip empty background voxels to save processing time
             if numpy.std(voxel_data) > 0:
                 cross = scipy.signal.correlate(
-                    normalise(voxel_data), norm_signal,
-                    mode="same")
+                    normalise(voxel_data), norm_signal, mode="same"
+                )
                 # Store the max cross-correlation value
                 # (as done in the original snippet)
                 c = numpy.max(cross)

@@ -10,15 +10,14 @@ from . import __version__
 
 def arg_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "data", type=Path,
-        help="the name of the input file")
+    parser.add_argument("data", type=Path, help="the name of the input file")
     parser.add_argument(
         "-o", "--output", type=Path, default="hr.png",
-        help="write output to file")
+        help="write output to file"
+    )
     parser.add_argument(
-        "--version", action="version",
-        version=f'%(prog)s {__version__}')
+        "--version", action="version", version=f"%(prog)s {__version__}"
+    )
     return parser
 
 
@@ -43,5 +42,5 @@ def main():
     pyplot.savefig(args.output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
