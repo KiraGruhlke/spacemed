@@ -32,8 +32,8 @@ def main():
     nt = fmri_data.shape[-1]
 
     # 3. Create the block-design signal
-    s_one = numpy.array([1]*5 + [0]*5)
-    signal = numpy.tile(s_one, int(numpy.ceil(nt/10)))
+    s_one = numpy.array([1] * 5 + [0] * 5)
+    signal = numpy.tile(s_one, int(numpy.ceil(nt / 10)))
     signal = signal[:nt]
     norm_signal = normalise(signal)
 
@@ -44,7 +44,7 @@ def main():
 
     # Verify the requested slice is within bounds
     if z_slice < 0 or z_slice >= fmri_data.shape[2]:
-        print(f"Error: Slice {z_slice} is out of bounds. Must be between 0 and {fmri_data.shape[2]-1}")
+        print(f"Error: Slice {z_slice} is out of bounds. Must be between 0 and {fmri_data.shape[2] - 1}")
         return
 
     print(f"Processing cross-correlation for slice {z_slice}. This may take a moment...")
@@ -55,13 +55,14 @@ def main():
         for y in range(y_dim):
             # Extract time series for the specific voxel
             voxel_data = fmri_data[x, y, z_slice, :]
-            
+
             # Skip empty background voxels to save processing time
             if numpy.std(voxel_data) > 0:
                 cross = scipy.signal.correlate(
                     normalise(voxel_data), norm_signal,
                     mode="same")
-                # Store the max cross-correlation value as done in the original snippet
+                # Store the max cross-correlation value
+                # (as done in the original snippet)
                 c = numpy.max(cross)
                 cross_corr_map[x, y] = c
 
@@ -69,7 +70,8 @@ def main():
     print(f"Saving output to {args.output_image}...")
     fig, axes = pyplot.subplots(1)
 
-    # Plotted transposed (.T) and with origin="lower" to match your anatomy plot style
+    # Plotted transposed (.T)
+    # and with origin="lower" to match your anatomy plot style
     # Used 'hot' colormap as it is standard for fMRI activation maps
     im = axes.imshow(cross_corr_map.T, origin="lower", cmap="hot")
     fig.colorbar(im, ax=axes, label="Max Cross-Correlation")
