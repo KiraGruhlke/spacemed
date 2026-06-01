@@ -17,7 +17,7 @@ def main():
 
     # 2. Load the data
     data_path = "/home/kigr11/Spacemed-2026/kigr11/data"
-    img_file = os.path.join(data_path, "fmri-data/2_Anatomy_1mm_5min.nii")
+    img_file = os.path.join(data_path, "mri-data/2_Anatomy_1mm_5min.nii")
     
     anatomy = nibabel.load(img_file)
     data_anatomy = anatomy.get_fdata()
@@ -29,7 +29,8 @@ def main():
         sys.exit(1)
 
     # 4. Create output directory if it doesn't exist
-    output_dir = os.path.join(data_path, "fmri-data/slices")
+    output_dir = os.path.join(data_path, "f
+    mri-data/slices")
     os.makedirs(output_dir, exist_ok=True)
 
     # 5. Plot and Save the slice
@@ -40,8 +41,8 @@ def main():
 
     # Save with zero-padded formatting (e.g., slice_005.png) so they sort correctly
     output_file = os.path.join(output_dir, f"slice_{slice_idx:03d}.png")
-    plt.savefig(output_file, bbox_inches='tight')
-    plt.close(fig)
+    pyplot.savefig(output_file, bbox_inches='tight')
+    pyplot.close(fig)
     
     print(f"Successfully saved slice {slice_idx} to {output_file}")
 
