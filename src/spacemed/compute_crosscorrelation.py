@@ -10,3 +10,4 @@ def compute_crosscorrelation(fmri_data, signal, p):
         mode="same")
     c = numpy.max(cross) # maximal cross correlation
     print(c)
+    

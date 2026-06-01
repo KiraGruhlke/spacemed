@@ -21,7 +21,7 @@ def main():
     parser.add_argument("output_image", help="the name of the output image file")
     args = parser.parse_args()
 
-    # 2. Load the fMRI data
+    # 2. Load the MRI data
     print(f"Loading {args.fmri_file}...")
     fmri = nibabel.load(args.fmri_file)
     fmri_data = fmri.get_fdata()
