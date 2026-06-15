@@ -1,6 +1,6 @@
-import numpy   # noqa F401
-from matplotlib import pyplot   # noqa F401
-import spacemed   # noqa F401
+import numpy  # noqa F401
+from matplotlib import pyplot  # noqa F401
+import spacemed  # noqa F401
 
 
 def calc_heart_rate(time, peaks):
