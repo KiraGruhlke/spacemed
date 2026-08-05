@@ -1,4 +1,4 @@
 # Session 10 Reflection: Finally
-*Date: June 01, 2026
-Course: SpaceMed – U5-EC3 Digital Literacy*
+*Date: June 01, 2026 <br>
+Course: SpaceMed – U5-EC3 Digital Literacy* <br>
 In session 10 we talked about automation and release management. If I developed a program and have it released, I will keep working on it. But while I implement these updates, they shouldn’t break the running program. For that we talked about continuous integration (frequently merging code modifications into the main branch), continuous delivery (building software in short cycles and keeping it in a deployable state) and continuous deployment (the automated release). By creating a pipeline with integrated tests this was applied for our package (all the code is automatically pytested und flake8ed) before release. We then revised semantic versioning (MAJOR.MINOR.PATCH) to keep track of the version of our code.
