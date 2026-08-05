@@ -5,10 +5,8 @@ In a Conda-environment with Pandas we created functions to read a pulseoxymetry 
 # Biography Kira Gruhlke 
 *I am an extraordinarily motivated and highly responsible person, very eager to learn from new experience.* 
 ## Important Dates
-**Date of birth:** 05/10/1997 (Stendal, Germany) 
-
-**High school diploma:** 04/06/2026, (Lauenburgische Gelehrtenschule Ratzeburg, Germany) 
-
+<p>**Date of birth:** 05/10/1997 (Stendal, Germany)</p>
+**High school diploma:** 04/06/2026, (Lauenburgische Gelehrtenschule Ratzeburg, Germany)
 **state examination and license certificate as a physician:** 22/12/2022 (Christian Albrechts-Universität zu Kiel, Germany) 
 ## Work experience  
 **internships during my studies (among others):** 
