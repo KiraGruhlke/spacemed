@@ -1,0 +1,6 @@
+# Session 2 Reflection: Basic python
+*Date: March 16, 2026
+Course: SpaceMed – U5-EC3 Digital Literacy*
+In the second session, we mainly started to learn the programming language of Python.
+Before going into that we navigated through github and jupyter. This showed how and were to create, work on, see content and submit files as well as where we are in terms of navigating the program. 
+We then got into the Jupyter-Notebook function to see it's perks: the immediate outcome of every command and used them to sart the first commands in Python and how they work.
