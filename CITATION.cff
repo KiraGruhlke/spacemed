@@ -3,7 +3,8 @@ message: "If you use this software, please cite it as below."
 authors:
   - family-names: "Gruhlke"
     given-names: "Kira"
-title: "SpaceMed 2026: Heart Rate Calculation"
+title: "SpaceMed 2026: Biodata processing"
 version: 1.0.4
 date-released: 2026-05-03
-url: "https://git.bihealth.org/spacemed-digital-literacy/2026/personal/kigr11"
+license: MIT
+url: "https://github.com/KiraGruhlke/spacemed"
